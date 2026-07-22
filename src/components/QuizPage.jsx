@@ -1,8 +1,6 @@
 import React from "react"
 import he from "he"
 import {clsx} from 'clsx'
-
-
 export default function QuizPage(props){
     // These are all the options that the user clicks, stored in a dictionary 
     const [clickedAnswers, setClickedAnswers] = React.useState({});
@@ -15,7 +13,6 @@ export default function QuizPage(props){
 
     //This checks the status of the quiz whether it is submitted or not.
     const [quizSubmitted, setQuizSubmitted] = React.useState(false);
-
 
     //This checks if there are 5 inputs from the user. 
     React.useEffect(()=>{
@@ -35,7 +32,6 @@ export default function QuizPage(props){
 
     },[quizSubmitted])
 
-
     // This function (sourced from the internet) is to shuffle the options for each question. 
     function shuffle(array) {
         let currentIndex = array.length;
@@ -54,6 +50,15 @@ export default function QuizPage(props){
         return array;
     }
 
+    const shuffledAnswersByQuestion = React.useMemo(()=>{
+        if (!props.apiData.results) return [];
+        return props.apiData.results.map((question)=>{
+            const answers = [question.correct_answer,...question.incorrect_answers]
+            shuffle(answers)
+            return answers
+        })
+    },[props.apiData.results])
+
     //This makes sure that the code only runs after all the required data from the API is fetched. 
     if (!props.apiData.results){
         return <p>Loading...</p>
@@ -71,10 +76,7 @@ export default function QuizPage(props){
 
     const questions = props.apiData.results.map((question, questionIndex)=>{
 
-        let answers = []
-        answers.push(question.correct_answer)
-        answers.push(...question.incorrect_answers)
-
+        const answers = shuffledAnswersByQuestion[questionIndex]
         const choices = answers.map((answer, answerIndex)=>{
             return <button disabled = {quizSubmitted}
             key = {answerIndex} onClick = {()=>setClickedAnswers(prev=>({

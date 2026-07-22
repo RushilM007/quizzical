@@ -26,7 +26,7 @@ export default function QuizPage(props){
 
     // Once the quiz is submitted this counts the number of correct answers. 
     React.useEffect(()=>{
-        if (!props.questions.results) return;
+        if (!props.apiData.results) return;
         for (let i = 0; i <= 4; i ++){
             if (correctAnswersDict[i]===clickedAnswers[i]){
                 setCorrectAnswersState(prev=>prev+1);
@@ -55,7 +55,7 @@ export default function QuizPage(props){
     }
 
     //This makes sure that the code only runs after all the required data from the API is fetched. 
-    if (!props.questions.results){
+    if (!props.apiData.results){
         return <p>Loading...</p>
     }
 
@@ -63,13 +63,13 @@ export default function QuizPage(props){
     let correctAnswersDict = {};
 
     //This stores the correct answers for all the questions in a dictionary. 
-    const correctAnswers = props.questions.results.map((question,questionIndex)=>{
+    const correctAnswers = props.apiData.results.map((question,questionIndex)=>{
         correctAnswersDict[questionIndex] = question.correct_answer;
     })
 
     //The code block below is to render all the questions and the options that the user is to select from
 
-    const questions = props.questions.results.map((question, questionIndex)=>{
+    const questions = props.apiData.results.map((question, questionIndex)=>{
 
         let answers = []
         answers.push(question.correct_answer)
@@ -89,7 +89,7 @@ export default function QuizPage(props){
             
             )}>{he.decode(answer)}</button>
         })
-        
+
         return (
             <>
             <h4 key = {questionIndex} className = "questions">{he.decode(question.question)}</h4>

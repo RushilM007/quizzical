@@ -40,7 +40,7 @@ export default function App(){
   return (
     <>
     {!startQuiz && <StartPage toggleStartQuiz = {toggleStartQuiz} />}
-    {startQuiz && <QuizPage questions = {apiData}/>}
+    {startQuiz && <QuizPage apiData = {apiData}/>}
     </>
   )
 }
